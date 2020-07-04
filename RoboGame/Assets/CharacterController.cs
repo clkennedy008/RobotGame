@@ -6,6 +6,7 @@ public class CharacterController : MonoBehaviour
 {
     // Start is called before the first frame update
     public Animator animator;
+    public Animator BobAnimator;
     public Rigidbody2D RG;
     public SpriteRenderer spriteRenderer;
 
@@ -36,6 +37,7 @@ public class CharacterController : MonoBehaviour
             if(!moving){
                 moving = true;
                 animator.SetBool("Moving", moving);
+                BobAnimator.SetBool("Moving", moving);
             }
         }else if(Input.GetKey(KeyCode.S)){
             direction.y = -1;
@@ -44,6 +46,7 @@ public class CharacterController : MonoBehaviour
             if(!moving){
                 moving = true;
                 animator.SetBool("Moving", moving);
+                BobAnimator.SetBool("Moving", moving);
             }
         }else{
             if(direction.x != 0){
@@ -60,6 +63,7 @@ public class CharacterController : MonoBehaviour
             if(!moving){
                 moving = true;
                 animator.SetBool("Moving", moving);
+                BobAnimator.SetBool("Moving", moving);
             }
         }else if(Input.GetKey(KeyCode.A)){
             direction.x = -1;
@@ -68,6 +72,7 @@ public class CharacterController : MonoBehaviour
             //spriteRenderer.flipX = true;
             if(!moving){
                 moving = true;
+                BobAnimator.SetBool("Moving", moving);
                 animator.SetBool("Moving", moving);
             }
         }else{
@@ -80,9 +85,11 @@ public class CharacterController : MonoBehaviour
         if(!movePressed && moving){
             moving = false;
             animator.SetBool("Moving", moving);
+            BobAnimator.SetBool("Moving", moving);
         }
         Vector2 vel = new Vector2(0,0);
         if(movePressed){
+            Debug.Log(movePressed);
             vel = direction;
             if(vel.x != 0 && vel.y != 0){
                 vel.x *= .75f;
