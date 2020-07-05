@@ -11,7 +11,7 @@ public class GroundChunk : MonoBehaviour
     public Vector2 size = new Vector2(20,20);
     void Start()
     {
-        EnergyTracker.singleton.spawnEnergyOnChunk(pos, size);
+        EnergyTracker.singleton.spawnEnergyOnChunk(this);
     }
 
     // Update is called once per frame

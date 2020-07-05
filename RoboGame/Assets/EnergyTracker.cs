@@ -35,8 +35,8 @@ public class EnergyTracker : MonoBehaviour
         EnergyCountText.text = Count.ToString();
     }
 
-    public void spawnEnergyOnChunk(Vector2 pos, Vector2 size){
-        int toSpawn = (int)(Mathf.Sqrt((pos.x * pos.x) + (pos.y * pos.y)) / distanceToNextIncrease);
+    public void spawnEnergyOnChunk(GroundChunk gc){
+        int toSpawn = (int)(Mathf.Sqrt((gc.pos.x * gc.pos.x) + (gc.pos.y * gc.pos.y)) / distanceToNextIncrease);
 
         if(toSpawn < minEnergy){
             toSpawn = minEnergy;
@@ -47,10 +47,11 @@ public class EnergyTracker : MonoBehaviour
 
         for(int i = 0;i < toSpawn; i ++){
             if(Random.Range(0f, 1f) < (spawnChance / 100f)){
-                Vector2 spawnPos = new Vector2(Random.Range((size.x * pos.x) - (size.x /2), (size.x * pos.x) + (size.x /2)),
-                                                Random.Range((size.y * pos.y) - (size.y /2), (size.y * pos.y) + (size.y /2)));
+                Vector2 spawnPos = new Vector2(Random.Range((gc.size.x * gc.pos.x) - (gc.size.x /2), (gc.size.x * gc.pos.x) + (gc.size.x /2)),
+                                                Random.Range((gc.size.y * gc.pos.y) - (gc.size.y /2), (gc.size.y * gc.pos.y) + (gc.size.y /2)));
                 GameObject e =  GameObject.Instantiate(EnergyPrefab);
                 e.transform.position = spawnPos;
+                e.transform.SetParent(gc.transform);
             }
         }
     }

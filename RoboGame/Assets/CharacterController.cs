@@ -14,6 +14,7 @@ public class CharacterController : MonoBehaviour
     public bool moving = false;
     public bool movePressed = false;
     public Vector2 direction;
+    public ParticleSystem particleSystem;
     void Start()
     {
         
@@ -38,6 +39,7 @@ public class CharacterController : MonoBehaviour
                 moving = true;
                 animator.SetBool("Moving", moving);
                 BobAnimator.SetBool("Moving", moving);
+                particleSystem.Play();
             }
         }else if(Input.GetKey(KeyCode.S)){
             direction.y = -1;
@@ -47,6 +49,7 @@ public class CharacterController : MonoBehaviour
                 moving = true;
                 animator.SetBool("Moving", moving);
                 BobAnimator.SetBool("Moving", moving);
+                particleSystem.Play();
             }
         }else{
             if(direction.x != 0){
@@ -64,6 +67,7 @@ public class CharacterController : MonoBehaviour
                 moving = true;
                 animator.SetBool("Moving", moving);
                 BobAnimator.SetBool("Moving", moving);
+                particleSystem.Play();
             }
         }else if(Input.GetKey(KeyCode.A)){
             direction.x = -1;
@@ -74,6 +78,7 @@ public class CharacterController : MonoBehaviour
                 moving = true;
                 BobAnimator.SetBool("Moving", moving);
                 animator.SetBool("Moving", moving);
+                particleSystem.Play();
             }
         }else{
             if(direction.y != 0){
@@ -86,6 +91,7 @@ public class CharacterController : MonoBehaviour
             moving = false;
             animator.SetBool("Moving", moving);
             BobAnimator.SetBool("Moving", moving);
+            particleSystem.Stop();
         }
         Vector2 vel = new Vector2(0,0);
         if(movePressed){
