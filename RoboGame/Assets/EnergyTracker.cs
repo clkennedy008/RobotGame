@@ -55,4 +55,9 @@ public class EnergyTracker : MonoBehaviour
             }
         }
     }
+
+    public void spend(int amount){
+        Count -= amount;
+        EnergyCountText.text = Count.ToString();
+    }
 }

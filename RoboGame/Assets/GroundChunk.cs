@@ -12,6 +12,10 @@ public class GroundChunk : MonoBehaviour
     void Start()
     {
         EnergyTracker.singleton.spawnEnergyOnChunk(this);
+        SpiderSpawner.singleton.spawnSpiderOnChunk(this);
+        if(!Chuncks.Contains(this)){
+            Chuncks.Add(this);
+        }
     }
 
     // Update is called once per frame
@@ -23,6 +27,7 @@ public class GroundChunk : MonoBehaviour
     void OnTriggerEnter2D(Collider2D collider)
     {
         if(collider.gameObject.tag == "Player"){
+            //Debug.Log("Hit : " + Chuncks.Count);
             for(int x = -1; x <= 1; x ++){
                 for(int y = -1; y <= 1; y ++){
                     if(y == 0 && x == 0){

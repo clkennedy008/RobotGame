@@ -6,6 +6,8 @@ public class LifeManager : MonoBehaviour
 {
     public static LifeManager singleton;
     // Start is called before the first frame update
+
+    public int maxLife = 3;
     public int currentLife = 3;
     public bool isDead = false;
     public GameObject lifePool;
@@ -35,6 +37,9 @@ public class LifeManager : MonoBehaviour
     public void takeLife(){
         currentLife--;
         GameObject.Destroy(this.transform.GetChild(currentLife).gameObject);
+        if(currentLife == 0){
+            GameState.singleton.setGameOver();
+        }
     }
     public void addLife(){
         currentLife++;
