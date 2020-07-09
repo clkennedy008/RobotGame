@@ -42,4 +42,10 @@ public class Flicker : MonoBehaviour
             f.maxDist += (1);
         }
     }
+
+    public static void enterBossRoom(){
+        for(int i = 0; i < lanterns.Count; i ++){
+            GameObject.Destroy(lanterns[i].gameObject);
+        }
+    }
 }

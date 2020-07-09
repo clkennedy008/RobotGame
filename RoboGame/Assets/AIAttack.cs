@@ -6,6 +6,8 @@ public class AIAttack : MonoBehaviour
 {
     // Start is called before the first frame update
     public AIController controller;
+
+    public bool isBoss = false;
     void Start()
     {
         
@@ -18,7 +20,7 @@ public class AIAttack : MonoBehaviour
     }
 
     void OnTriggerEnter2D(Collider2D collider){
-        if(controller.attacked && controller.canDamage && collider.gameObject.tag == "Player"){
+        if(((controller.attacked && controller.canDamage)) && collider.gameObject.tag == "Player"){
             LifeManager.singleton.takeLife();
             controller.canDamage = false;
         }

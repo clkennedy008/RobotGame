@@ -10,10 +10,7 @@ public class GroundChunk : MonoBehaviour
 
     public Vector2 size = new Vector2(20,20);
     void Start()
-    {
-        EnergyTracker.singleton.spawnEnergyOnChunk(this);
-        SpiderSpawner.singleton.spawnSpiderOnChunk(this);
-        if(!Chuncks.Contains(this)){
+    {   if(!Chuncks.Contains(this)){
             Chuncks.Add(this);
         }
     }
@@ -38,6 +35,7 @@ public class GroundChunk : MonoBehaviour
                     foreach(GroundChunk g in Chuncks){
                         if(g.pos.Equals(potentialPos)){
                             alreadyExist = true;
+                            g.gameObject.SetActive(true);
                             break;
                         }
                     }
@@ -45,12 +43,7 @@ public class GroundChunk : MonoBehaviour
                     if(alreadyExist){
                         continue;
                     }else{
-                        GameObject groundChunk = GameObject.Instantiate(this.gameObject);
-                        GroundChunk gC = groundChunk.GetComponent<GroundChunk>();
-                        gC.pos = new Vector2(potentialPos.x, potentialPos.y);
-                        groundChunk.transform.SetParent(this.transform.parent);
-                        groundChunk.transform.localPosition = gC.size * gC.pos;
-                        Chuncks.Add(gC);
+                        GroundManager.singleton.makeChunk(potentialPos);
                     }
                 }
             }

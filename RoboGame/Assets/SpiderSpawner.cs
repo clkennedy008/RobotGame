@@ -19,6 +19,10 @@ public class SpiderSpawner : MonoBehaviour
     public int Count;
     void Start()
     {
+        
+    }
+
+    void Awake(){
         singleton = this;
     }
 

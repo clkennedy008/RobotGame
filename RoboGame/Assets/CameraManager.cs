@@ -6,6 +6,7 @@ public class CameraManager : MonoBehaviour
 {
     // Start is called before the first frame update
     Camera MainCamera;
+    GameObject MainCameraGO;
     public GameObject Player;
     public float lerpSpeed = 1f;
 
@@ -21,7 +22,8 @@ public class CameraManager : MonoBehaviour
     public bool canZoom = true;
     public float ToOrthSize; 
     void Start()
-    {
+    {   
+        MainCameraGO = GameObject.Find("Main Camera").transform.parent.gameObject;
         MainCamera = GameObject.Find("Main Camera").GetComponent<Camera>();
         curPos = MainCamera.transform.position;
         ToOrthSize = MainCamera.orthographicSize;
@@ -32,8 +34,8 @@ public class CameraManager : MonoBehaviour
     {
         Vector2 pos = Player.transform.position;
         Vector3 posCam = this.gameObject.transform.position;
-        curPos = MainCamera.gameObject.transform.position;
-        this.gameObject.transform.position = new Vector3(Mathf.Lerp(posCam.x, pos.x, Time.deltaTime * lerpSpeed), Mathf.Lerp(posCam.y, pos.y, Time.deltaTime * lerpSpeed), posCam.z);
+        curPos = MainCameraGO.transform.position;
+        MainCameraGO.transform.position = new Vector3(Mathf.Lerp(posCam.x, pos.x, Time.deltaTime * lerpSpeed), Mathf.Lerp(posCam.y, pos.y, Time.deltaTime * lerpSpeed * 2), posCam.z);
         
         bindToWorld();
     
@@ -46,7 +48,7 @@ public class CameraManager : MonoBehaviour
         canZoom = true;
         if(ray.collider == null || ray.collider.gameObject.tag != "Ground")
         {
-            MainCamera.gameObject.transform.position = new Vector3(MainCamera.gameObject.transform.position.x, curPos.y, curPos.z);
+            MainCameraGO.transform.position = new Vector3(MainCamera.gameObject.transform.position.x, curPos.y, curPos.z);
             maxSize = MainCamera.orthographicSize;
             canZoom = false;
         }
@@ -56,7 +58,7 @@ public class CameraManager : MonoBehaviour
         ray = Physics2D.Raycast(rayPoimnt, Vector2.zero, Mathf.Infinity, LayerMask.GetMask("Ground"));
         if (ray.collider == null || ray.collider.gameObject.tag != "Ground")
         {
-            MainCamera.gameObject.transform.position = new Vector3(MainCamera.gameObject.transform.position.x, curPos.y, curPos.z);
+            MainCameraGO.transform.position = new Vector3(MainCamera.gameObject.transform.position.x, curPos.y, curPos.z);
             maxSize = MainCamera.orthographicSize;
             canZoom = false;
         }
@@ -66,7 +68,7 @@ public class CameraManager : MonoBehaviour
         ray = Physics2D.Raycast(rayPoimnt, Vector2.zero, Mathf.Infinity, LayerMask.GetMask("Ground"));
         if (ray.collider == null || ray.collider.gameObject.tag != "Ground")
         {
-            MainCamera.gameObject.transform.position = new Vector3(curPos.x, MainCamera.gameObject.transform.position.y, curPos.z);
+            MainCameraGO.transform.position = new Vector3(curPos.x, MainCamera.gameObject.transform.position.y, curPos.z);
             maxSize = MainCamera.orthographicSize;
             canZoom = false;
         }
@@ -77,7 +79,7 @@ public class CameraManager : MonoBehaviour
         ray = Physics2D.Raycast(rayPoimnt, Vector2.zero, Mathf.Infinity, LayerMask.GetMask("Ground"));
         if (ray.collider == null || ray.collider.gameObject.tag != "Ground")
         {
-            MainCamera.gameObject.transform.position = new Vector3(curPos.x, MainCamera.gameObject.transform.position.y, curPos.z);
+            MainCameraGO.transform.position = new Vector3(curPos.x, MainCamera.gameObject.transform.position.y, curPos.z);
             maxSize = MainCamera.orthographicSize;
             canZoom = false;
         }

@@ -26,8 +26,17 @@ public class CharacterController : MonoBehaviour
     public float attackCDTimer = 0f;
     public bool canAttack = true;
     public bool attacked = false;
+
+    public GunManager gunManager;
+
+    public Joystick joystick;
+
+    public Transform aimer;
     void Start()
-    {
+    {   
+        foreach(string s in Input.GetJoystickNames()){
+                Debug.Log(s);
+        }
         
     }
 
@@ -43,10 +52,11 @@ public class CharacterController : MonoBehaviour
         if(GameState.singleton.GameOver || MainMenu.singleton.MainMenuOpen) return;
 
         movePressed = false;
-        if(!rooted){
-            if(Input.GetKey(KeyCode.W)){
+        
+        if(!rooted && !(Input.GetAxis("Aim") > 0)){
+            if(Input.GetKey(KeyCode.W) || Input.GetAxis("CVert") > .2 || joystick.Vertical > .2){
                 direction.y = 1;
-                animator.SetFloat("Vert", direction.y);
+                //animator.SetFloat("Vert", direction.y);
                 movePressed = true;
                 if(!moving){
                     moving = true;
@@ -54,9 +64,9 @@ public class CharacterController : MonoBehaviour
                     BobAnimator.SetBool("Moving", moving);
                     particleSystem.Play();
                 }
-            }else if(Input.GetKey(KeyCode.S)){
+            }else if(Input.GetKey(KeyCode.S) || Input.GetAxis("CVert") < -.2 || joystick.Vertical < -.2){
                 direction.y = -1;
-                animator.SetFloat("Vert", direction.y);
+                //animator.SetFloat("Vert", direction.y);
                 movePressed = true;
                 if(!moving){
                     moving = true;
@@ -67,13 +77,13 @@ public class CharacterController : MonoBehaviour
             }else{
                 if(direction.x != 0){
                     direction.y = 0;
-                    animator.SetFloat("Vert", direction.y);
+                    //animator.SetFloat("Vert", direction.y);
                 }
             }
 
-            if(Input.GetKey(KeyCode.D)){
+            if(Input.GetKey(KeyCode.D) || Input.GetAxis("CHorz") > .2 || joystick.Horizontal > .2){
                 direction.x = 1;
-                animator.SetFloat("Horz", direction.x);
+                //animator.SetFloat("Horz", direction.x);
                 movePressed = true;
                 //spriteRenderer.flipX = false;
                 if(!moving){
@@ -82,21 +92,21 @@ public class CharacterController : MonoBehaviour
                     BobAnimator.SetBool("Moving", moving);
                     particleSystem.Play();
                 }
-            }else if(Input.GetKey(KeyCode.A)){
+            }else if(Input.GetKey(KeyCode.A) || Input.GetAxis("CHorz") < -.2 || joystick.Horizontal < -.2){
                 direction.x = -1;
-                animator.SetFloat("Horz", direction.x);
+                //animator.SetFloat("Horz", direction.x);
                 movePressed = true;
                 //spriteRenderer.flipX = true;
                 if(!moving){
                     moving = true;
                     BobAnimator.SetBool("Moving", moving);
-                    animator.SetBool("Moving", moving);
+                    //animator.SetBool("Moving", moving);
                     particleSystem.Play();
                 }
             }else{
                 if(direction.y != 0){
                     direction.x = 0;
-                    animator.SetFloat("Horz", direction.x);
+                    //animator.SetFloat("Horz", direction.x);
                 }
             }
         }else{
@@ -108,23 +118,18 @@ public class CharacterController : MonoBehaviour
         }
         
 
+
         if(!movePressed && moving){
             moving = false;
             animator.SetBool("Moving", moving);
             BobAnimator.SetBool("Moving", moving);
             particleSystem.Stop();
         }
-        Vector2 vel = new Vector2(0,0);
-        if(movePressed){
-            vel = direction;
-            if(vel.x != 0 && vel.y != 0){
-                vel.x *= .75f;
-                vel.y *= .75f;
-            }
-        }
+        
         if(Sword.activeSelf && swordAnimator.GetCurrentAnimatorStateInfo(0).IsName("Idle")){
-            Sword.SetActive(false);
+            //Sword.SetActive(false);
             attacked = false;
+            
         }
 
         if(!canAttack){
@@ -135,44 +140,100 @@ public class CharacterController : MonoBehaviour
             }  
         }
 
-        if(Input.GetMouseButton(0) && !attacked && canAttack){
-            attacked = true;
+        if(((Input.GetMouseButton(0) && !Application.isMobilePlatform) || Input.GetAxis("Swing") > 0) && !attacked && canAttack){
+            SwingSword();
+        }
 
+        if(((Input.GetMouseButton(1) && !Application.isMobilePlatform) || Input.GetAxis("FireGun") > 0)){
+           FireGun();
+        }
+        Vector2 vel = new Vector2(0,0);
+        if(movePressed){
+            vel = direction;
+            if(vel.x != 0 && vel.y != 0){
+                vel.x *= .75f;
+                vel.y *= .75f;
+            }
+        }
+        if(!attacked){
+            animator.SetFloat("Horz", direction.x);
+            animator.SetFloat("Vert", direction.y);
+        }else{
+            vel *= .5f;
+        }
+
+        
+        RG.MovePosition(new Vector2(this.transform.position.x, this.transform.position.y) + vel * moveSpeed * Time.deltaTime);
+    }
+
+    public Vector2 getDirection(){
+        return direction;
+    }
+
+    public void SwingSword(){
+        if(!canAttack) return;
+        
+            attacked = true;
+            Sword.GetComponentInChildren<Sword>().Hit = false;
             canAttack = false;
 
             Vector2 mosPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             float deltaX = mosPos.x - this.transform.position.x;
             float deltaY = mosPos.y - this.transform.position.y;
             //rooted = true;
-            direction = new Vector2(0,0);
+            //direction = new Vector2(0,0);
             Sword.SetActive(true);
 
+            
             float angle = Mathf.Atan2((mosPos.y - this.transform.position.y) , (mosPos.x - this.transform.position.x) ) * (180/Mathf.PI);
+
+            if(Application.isMobilePlatform){
+                angle = JoyStickAngle.singleton.Angle;
+                deltaX = aimer.position.x - this.transform.position.x;
+                deltaY = aimer.position.y - this.transform.position.y;
+            }
+            if(ContollerCheck.singleton.controllerUsed){
+                angle = ContollerCheck.singleton.Angle;
+                deltaX = aimer.position.x - this.transform.position.x;
+                deltaY = aimer.position.y - this.transform.position.y;
+            }
 
             Sword.transform.rotation = Quaternion.Euler(0,0,angle);
 
             swordAnimator.SetTrigger("Swing");
-           /* if(Mathf.Abs(deltaX) > Mathf.Abs(deltaY)){
+            if(Mathf.Abs(deltaX) > Mathf.Abs(deltaY)){
+                direction.y = 0;
                 if(deltaX > 0){
-                    swordAnimator.SetTrigger("Swing");
+                    //swordAnimator.SetTrigger("Swing");
                     direction.x = 1;
                 }else{
-                    swordAnimator.SetTrigger("Swing");
+                    //swordAnimator.SetTrigger("Swing");
                     direction.x = -1;
                 }
             }else{
+                direction.x= 0;
                 if(deltaY <= 0){
-                    swordAnimator.SetTrigger("Swing");
+                    //swordAnimator.SetTrigger("Swing");
                     direction.y = -1;
                 }else{
-                    swordAnimator.SetTrigger("Swing");
+                    //swordAnimator.SetTrigger("Swing");
                     direction.y = 1;
                 }
-            }*/
+            }
             animator.SetFloat("Horz", direction.x);
             animator.SetFloat("Vert", direction.y);
-        }
+    }
 
-        RG.MovePosition(new Vector2(this.transform.position.x, this.transform.position.y) + vel * moveSpeed * Time.deltaTime);
+    public void FireGun(){
+        if(GunManager.singleton.Equipped != null){
+            GunManager.singleton.Equipped.Fire(GunManager.singleton.transform.position);
+        }
+    }
+
+    public void placeWarp(){
+        WarpManager.singleton.PlaceWarp();
+    }
+    public void placeLatern(){
+        LanternManager.singleton.PlaceLantern();
     }
 }

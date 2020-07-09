@@ -6,6 +6,8 @@ public class LOSScript : MonoBehaviour
 {
     // Start is called before the first frame update
     public AIController controller;
+
+    public bool makeAngry = false;
     void Start()
     {
         
@@ -20,13 +22,20 @@ public class LOSScript : MonoBehaviour
     void OnTriggerEnter2D(Collider2D collider){
         if(collider.gameObject.tag == "Player"){
             controller.target = collider.gameObject;
+            if(makeAngry){
+                controller.makeAngry(true);
+            }
         }
     }
 
     void OnTriggerExit2D(Collider2D collider){
         if(collider.gameObject.tag == "Player"){
             controller.target = null;
+            if(makeAngry){
+                controller.makeAngry(false);
+            }
         }
+        
     }
 
     

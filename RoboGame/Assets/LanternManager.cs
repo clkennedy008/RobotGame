@@ -49,7 +49,7 @@ public class LanternManager : MonoBehaviour
             }
         }
 
-        if(Input.GetKey(KeyCode.F) && canPlace && currentLantern != 0){
+        if((Input.GetKey(KeyCode.F) || Input.GetAxis("Lantern") > 0) && canPlace && currentLantern != 0){
             GameObject o = GameObject.Instantiate(LanternPrefab);
             canPlace = false;
             o.transform.position = Player.transform.position;
@@ -69,5 +69,16 @@ public class LanternManager : MonoBehaviour
         GameObject heart = GameObject.Instantiate(LanternUIPrefab);
             heart.transform.SetParent(lanternPool.transform);
             heart.transform.localScale = new Vector3(1,1,1);
+    }
+    public void PlaceLantern(){
+        if(canPlace && currentLantern != 0){
+            GameObject o = GameObject.Instantiate(LanternPrefab);
+            canPlace = false;
+            o.transform.position = Player.transform.position;
+            takeLantern();
+            if(currentLantern == 0){
+                cooldownSlider.gameObject.SetActive(false);
+            }
+        }
     }
 }

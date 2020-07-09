@@ -273,8 +273,8 @@ CapsuleCollider2D:
   m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0.0049671256, y: 0.01484266}
-  m_Size: {x: 0.2979844, y: 0.13588673}
+  m_Offset: {x: 0.0049671386, y: 0.12290935}
+  m_Size: {x: 0.35202155, y: 0.35202155}
   m_Direction: 1
 --- !u!114 &3447163958836090396
 MonoBehaviour:
@@ -289,6 +289,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   pickedup: 0
+  worth: 1
 --- !u!1 &4300605116872961052
 GameObject:
   m_ObjectHideFlags: 0

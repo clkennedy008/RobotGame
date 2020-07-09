@@ -10,6 +10,8 @@ public class MainMenu : MonoBehaviour
 
     public bool MainMenuOpen = false;
     public GameObject pauseMenu;
+
+    public bool pressed = false;
     void Start()
     {
         singleton = this;
@@ -18,7 +20,11 @@ public class MainMenu : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(Input.GetKeyDown(KeyCode.Escape)){
+        if(pressed && Input.GetAxis("CStart") == 0){
+            pressed = false;
+        }
+        if(Input.GetKeyDown(KeyCode.Escape) || (Input.GetAxis("CStart") > 0 && !pressed)){
+            pressed = true;
             if(!MainMenuOpen){
                 MainMenuOpen = true;
                 pauseMenu.SetActive(true);

@@ -14,6 +14,8 @@ public class AIController : MonoBehaviour
 
     public bool canMove = true;
 
+    public bool stationary = false;
+
     public bool attacked;
 
     public float attackCooldown = 3f;
@@ -43,6 +45,13 @@ public class AIController : MonoBehaviour
     public AudioSource dieSound;
 
     public bool dead;
+
+    public Collider2D hitBox;
+
+    public Vector2 velocityCheck = new Vector2(.5f,.5f);
+
+    public int minEnergySpawn = 0;
+    public int maxEnergySpawn = 2;
     void Start()
     {
         
@@ -55,7 +64,7 @@ public class AIController : MonoBehaviour
 
         currentPos = this.transform.position;
 
-        if(reachedDestination){
+        if(reachedDestination || stationary){
             Moveto = currentPos;
         }else{
             if(Mathf.Abs(currentPos.x - Moveto.x) < moveToDeadZone && Mathf.Abs(currentPos.y - Moveto.y) < moveToDeadZone){
@@ -84,10 +93,14 @@ public class AIController : MonoBehaviour
             }
         }
 
-        if(target != null && canMove){
+        if(rigidbody.velocity.x < velocityCheck.x &&  rigidbody.velocity.y < velocityCheck.y){
+            rigidbody.velocity = new Vector2(0,0);
+        }
+
+        if(target != null && canMove && !stationary){
             Moveto = target.transform.position;
             reachedDestination = false;
-        }else if(canMove && reachedDestination){
+        }else if(canMove && reachedDestination && !stationary){
             if(groundChunk != null){
                 Moveto = new Vector3(Random.Range((groundChunk.pos.x * groundChunk.size.x) - (groundChunk.size.x /2), (groundChunk.pos.x * groundChunk.size.x) + (groundChunk.size.x /2)),
                                     Random.Range((groundChunk.pos.y * groundChunk.size.y) - (groundChunk.size.y /2), (groundChunk.pos.y * groundChunk.size.y) + (groundChunk.size.y /2)), 0);
@@ -102,6 +115,10 @@ public class AIController : MonoBehaviour
             //this.transform.position = new Vector3(Mathf.Lerp(currentPos.x, Moveto.x, Time.deltaTime * chaseSpeed), 
                    // Mathf.Lerp(currentPos.y, Moveto.y, Time.deltaTime * chaseSpeed), currentPos.z);
             this.transform.position=Vector3.MoveTowards(currentPos, Moveto, Time.deltaTime * chaseSpeed);
+        }else if(target != null){
+            float angle = Mathf.Atan2(target.transform.position.y - currentPos.y, target.transform.position.x - currentPos.x) * (180/Mathf.PI);
+            angle -= angleAdjusment;
+            this.transform.rotation = Quaternion.Euler(0,0,angle);
         }
         
     }
@@ -118,10 +135,13 @@ public class AIController : MonoBehaviour
     }
 
     public void takeDamage(int damage){
+        if(dead) return;
         health -= damage;
         animator.SetTrigger("Hit");
-        
+        CameraShake.singleton.Shake();
         if(health <= 0){
+            int energy = Random.Range(minEnergySpawn, maxEnergySpawn + 1);
+            EnergyTracker.singleton.spawnEnergy(energy, this.transform.position);
             animator.SetTrigger("Die");
             StartCoroutine(die());
             deathParticles.Play();
@@ -136,5 +156,9 @@ public class AIController : MonoBehaviour
     IEnumerator die(){
         yield return new WaitForSeconds(10);
         GameObject.Destroy(this.gameObject);
+    }
+
+    public void makeAngry(bool angry){
+        animator.SetBool("isAngry", angry);
     }
 }
