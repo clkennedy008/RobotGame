@@ -1,0 +1,27 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!221 &22100000
+AnimatorOverrideController:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: RoboInvert
+  m_Controller: {fileID: 9100000, guid: 4e91595c8824e1b438d97820c5bfee45, type: 2}
+  m_Clips:
+  - m_OriginalClip: {fileID: 7400000, guid: 533d12045bb17a34f90088d46e2bffb0, type: 2}
+    m_OverrideClip: {fileID: 7400000, guid: b5b2a143ec697a246a61f02db43a648b, type: 2}
+  - m_OriginalClip: {fileID: 7400000, guid: 6e378ce8ef6e55142b9cc1eaa093acb2, type: 2}
+    m_OverrideClip: {fileID: 7400000, guid: 9a3e82ddedb26e748a571c7a8bf7ed27, type: 2}
+  - m_OriginalClip: {fileID: 7400000, guid: 62bb4ef5b0c4af54f80bbabd8747d6bb, type: 2}
+    m_OverrideClip: {fileID: 7400000, guid: 5c12c618f5b35b143abfb7852ec10ba5, type: 2}
+  - m_OriginalClip: {fileID: 7400000, guid: d9110072836eb0445bbb81196ff934ea, type: 2}
+    m_OverrideClip: {fileID: 7400000, guid: aa2b12a5b769ebc4c94c682862f3657c, type: 2}
+  - m_OriginalClip: {fileID: 7400000, guid: 079a83e35bd725c4bafc69f68ac03af8, type: 2}
+    m_OverrideClip: {fileID: 7400000, guid: d3e18e2c7471ff043bcb02740831cbc6, type: 2}
+  - m_OriginalClip: {fileID: 7400000, guid: f96a0712bcae43146a1df201b2fc7299, type: 2}
+    m_OverrideClip: {fileID: 7400000, guid: 6df0bfcfdbb2b8f4397b92bb761f9ebc, type: 2}
+  - m_OriginalClip: {fileID: 7400000, guid: aa0d45a721926e147bd305db0d95f400, type: 2}
+    m_OverrideClip: {fileID: 7400000, guid: 290cece90fd702e45a1b16429d2eaa48, type: 2}
+  - m_OriginalClip: {fileID: 7400000, guid: 5202d366cb8bc7845b12b1759b7361cb, type: 2}
+    m_OverrideClip: {fileID: 7400000, guid: 4b99063415f1e2c41a053635767ddf7e, type: 2}
